@@ -1,2 +1,11 @@
 # youtube_watch_party
 Youtube 同時視聴用ツール
+
+# 使い方
+index.php側が見る側、control.phpが操作する側。control.php上でYoutubeの動画IDを入力して送信するとindexで再生が始まります。タイムスタンプを基準に途中からの試聴はシークされて始まります。
+
+# パーミッションの設定について
+proxy/nowplay.jsonに書き込み権限を設定してつかってください。
+
+# ライセンスについて
+利用時のfooterのリンクは可能であれば残してください。
