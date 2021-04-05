@@ -16,6 +16,10 @@
   var tag = document.createElement('script');
   var time_open = <?php echo h_(time());?>;
   var time_load = 0;
+  
+  var tweet_hash = "503bad,metalwepon";
+  var tweet_user = "503_bad";
+  var tweet_message = "メタルMVを同時視聴中";
 
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -71,6 +75,10 @@
             now_play = data.url;
             console.log(now_play);
             time_load = data.time;
+            
+            var temp_text = encodeURI("https://www.youtube.com/watch?v="+now_play);
+            $("#tw_icon").attr("href","https://twitter.com/intent/tweet?via="+tweet_user+"&hashtags="+tweet_hash+"&url="+temp_text+"&text="+encodeURI(tweet_message));
+            
             if(!player){
               player = new YT.Player('player', {
                 height: '360',
@@ -82,6 +90,7 @@
                   'onStateChange': onPlayerStateChange
                 }
               });
+              
 
             }else{
               player.mute();
@@ -90,6 +99,7 @@
               player.cueVideoById(now_play,0);
               player.playVideo();
               $(".control button").addClass("btn_active");
+              
               // setTimeout(function(){click_event();},2000);
             // setTimeout(function(){player.playVideo();},5000);
             }
@@ -113,7 +123,9 @@
   </header>
   <main>
     <div id="player"></div>
-    <br>
+    <p class="notes">
+      <a id="tw_icon" class="tw_icon" target="_blank"><img src="./img/tw_icon.png"><span>再生中の動画をシェア</span></a>
+    </p>
     <div class="control">
       <button onclick="player.unMute();$('.control button').removeClass('btn_active');">ミュート解除（動画が始まったら押してね！）</button>
     </div>
