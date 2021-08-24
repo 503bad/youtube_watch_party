@@ -5,7 +5,8 @@
     fputs(
       $fp,
       json_encode(array(
-        "url"=>$_POST['url'],
+        "url"=>h_($_POST['url']),
+        "live"=>h_($_POST['live']),
         "time"=>time()
       ))
     );
@@ -25,9 +26,12 @@
 <body>
   <h1>Youtube Watch Party Control</h1>
   <form action="" method="post">
-    <input class="submit_id" name="url" placeholder="Input url" value="<?php echo h_($_POST['url']); ?>"><input type="submit" value="Submit">
+    <input class="submit_id" name="url" placeholder="Input video id" value="<?php echo h_($_POST['url']); ?>"><input type="submit" value="Submit">
     <br>
     <textarea class="memo_box" name="memo" placeholder="Memo"><?php echo h_($_POST['memo']); ?></textarea>
+    <br>
+    <input class="submit_id" name="live" placeholder="Input live video id" value="<?php echo h_($_POST['live']); ?>">
+    
 
   </form>
 </body>

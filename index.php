@@ -16,10 +16,13 @@
   var tag = document.createElement('script');
   var time_open = <?php echo h_(time());?>;
   var time_load = 0;
-  
-  var tweet_hash = "503bad,metalwepon";
-  var tweet_user = "503_bad";
-  var tweet_message = "メタルMVを同時視聴中";
+
+  /* //////////////////////////////
+  ここを編集して使う
+  ////////////////////////////// */
+  var tweet_hash = "503bad,deathconnected";//ツイートボタンで付加するハッシュタグをカンマ区切りで入力
+  var tweet_user = "503_bad";//ツイート時のメンション設定
+  var tweet_message = "メタルMVを同時視聴中";//ツイートの文面
 
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -57,6 +60,13 @@
     player.stopVideo();
   }
 
+  function unmute_loop(){
+    player.unMute();
+    setTimeout(function(){
+      unmute_loop();
+    },1000);
+  }
+
 
 
   var now_play = "";
@@ -73,12 +83,12 @@
         success: function(data) {
           if(now_play != data.url){
             now_play = data.url;
-            console.log(now_play);
             time_load = data.time;
-            
+
             var temp_text = encodeURI("https://www.youtube.com/watch?v="+now_play);
             $("#tw_icon").attr("href","https://twitter.com/intent/tweet?via="+tweet_user+"&hashtags="+tweet_hash+"&url="+temp_text+"&text="+encodeURI(tweet_message));
-            
+            $(".live_at").attr("href","https://www.youtube.com/watch?v="+data.live);
+
             if(!player){
               player = new YT.Player('player', {
                 height: '360',
@@ -90,7 +100,7 @@
                   'onStateChange': onPlayerStateChange
                 }
               });
-              
+
 
             }else{
               player.mute();
@@ -99,7 +109,7 @@
               player.cueVideoById(now_play,0);
               player.playVideo();
               $(".control button").addClass("btn_active");
-              
+
               // setTimeout(function(){click_event();},2000);
             // setTimeout(function(){player.playVideo();},5000);
             }
@@ -116,6 +126,29 @@
 
 
   </script>
+
+  <style>
+    .overlay{
+      position: fixed;
+      width:100%;
+      height: 100%;
+      top:0px;
+      left:0px;
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .overlay button{
+      position: fixed;
+      top:calc(50% - 20px);
+      width:200px;
+      left:calc(50% - 100px);
+    }
+
+    .live_at{
+        float:right;
+
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -125,19 +158,20 @@
     <div id="player"></div>
     <p class="notes">
       <a id="tw_icon" class="tw_icon" target="_blank"><img src="./img/tw_icon.png"><span>再生中の動画をシェア</span></a>
+      <a class="live_at" href="" target="_blank">同時視聴ライブ配信はこちら</a>
     </p>
-    <div class="control">
-      <button onclick="player.unMute();$('.control button').removeClass('btn_active');">ミュート解除（動画が始まったら押してね！）</button>
-    </div>
     <p class="notes">
       ご利用方法：<br>
-      同じ動画を同時に見るためのツールです。(<a href="https://youtu.be/BN2Sg_vRE4M" target="_blank">事例はこちら</a>)<br>
-      配信中には動画の再生が自動的に始まりますが、Googleの仕様上都度ミュートになります。<br>
-      始まったらミュートを解除しましょう。<br>
+      同じ動画を同時に見るためのツールです。<br>
       途中参加の方は自動的に再生位置までシークされるのでそのまま視聴できます。<br>
+      再生位置がずれたらブラウザのリロードをしましょう。
     </p>
   </main>
 
-  <footer>Powered by <a href="https://www.youtube.com/c/503badgateway" target="_blank">503 bad gateway</a></footer>
+  <footer>"Igarashi's Youtube Watch Party" (C)<a href="https://www.youtube.com/c/503badgateway" target="_blank">ヘヴィメタルバンド "503 bad gateway"</a></footer>
+
+  <div class="overlay">
+    <button class="btn_active" onclick="unmute_loop();$('.overlay').remove();">視聴開始</button>
+  </div>
 </body>
 </html>
